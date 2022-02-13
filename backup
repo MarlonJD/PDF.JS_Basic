@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.487/pdf.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.487/pdf.min.js"></script>
+  </head>
+
+  <body>
+    <canvas id="the-canvas" style="border:1px  solid black"></canvas>
+    <script id="script">
+      // Change base64 with a real base64
+      var pdfData = atob('base64');
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.487/pdf.worker.min.js';
+      pdfjsLib.getDocument({data: pdfData}).then(function getPdfHelloWorld(pdf)
+        {
+          pdf.getPage(1).then(function getPageHelloWorld(page)
+            {
+              var scale = 1.5;
+              var viewport = page.getViewport(scale);
+              var canvas = document.getElementById('the-canvas');
+              var context = canvas.getContext('2d');
+              canvas.height = viewport.height;
+              canvas.width = viewport.width;
+              var renderContext = 
+                {
+                  canvasContext: context,
+                  viewport: viewport
+                };
+              page.render(renderContext);
+            });
+      });
+    </script>
+  </body>
+</html>
