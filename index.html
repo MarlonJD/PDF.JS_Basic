@@ -9,6 +9,7 @@
   <body>
     <canvas id="the-canvas" style="border:1px  solid black"></canvas>
     <script id="script">
+      // Change base64 with a real base64
       var pdfData = atob('base64');
       pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.487/pdf.worker.min.js';
       pdfjsLib.getDocument({data: pdfData}).then(function getPdfHelloWorld(pdf)
