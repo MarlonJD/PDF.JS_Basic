@@ -1,38 +1,48 @@
-
 <!DOCTYPE html>
 <html>
 <body>
-    <style>html, body {margin: 0; padding: 0;}</style>
     <div id="vue">
         <vue-pdf-app style="height: 100vh;" :pdf="pdf" :config="config"></vue-pdf-app>
     </div>
 <script src="https://unpkg.com/vue"></script>
 <script src="https://unpkg.com/vue-pdf-app"></script>
 <script>
+    Vue.component('vue-pdf-app', window["vue-pdf-app"]);
+    //Vue.use(window["vue-pdf-app"]); 
+    
+    app = new Vue({
+        el: '#vue',
+        delimiters: ['[[', ']]'],
+        data: {
+            config: {
+                toolbar: {
+                toolbarViewerLeft: { findbar: false }
+                }
+            },
+            pdf: getPdf()
+        },
+        methods: {
+        },
+    })
+    function getPdf() {
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+        var base64_string = url.searchParams.get("base64");
+        const pdf = ${base64_string};
 
-<template>
-  <pdf :src="pdfSrc"></pdf>
-</template>
+        return base64ToArrayBuffer(pdf);
+        }
 
-<script>
-import vuePdf from 'vue-pdf'
-
-// since vue-pdf may be used server-side (see vuejs ssr)
-// converts base64 string into binary data as a javascript string
-var base64ToString = process.env.VUE_ENV === 'server' ? function(base64) { return Buffer.from(base64, 'base64').toString() } : window.atob;
-
-// get the binary version of the pdf
-var binaryVersionOfThePdf = base64ToString('JVBERi0xLjUKJbXtrvsKMyAwIG9iago8PCAvTGVuZ3RoIDQgMCBSCiAgIC9GaWx0ZXIgL0ZsYXRlRGVjb2RlCj4+CnN0cmVhbQp4nE2NuwoCQQxF+/mK+wMbk5lkHl+wIFislmIhPhYEi10Lf9/MVgZCAufmZAkMppJ6+ZLUuFWsM3ZXxvzpFNaMYjEriqpCtbZSBOsDzw0zjqPHZYtTrEmz4eto7/0K54t7GfegOGCBbBdDH3+y2zsMsVERc9SoRkXORqKGJupS6/9OmMIUfgypJL4KZW5kc3RyZWFtCmVuZG9iago0IDAgb2JqCiAgIDEzOAplbmRvYmoKMiAwIG9iago8PAogICAvRXh0R1N0YXRlIDw8CiAgICAgIC9hMCA8PCAvQ0EgMC42MTE5ODcgL2NhIDAuNjExOTg3ID4+CiAgICAgIC9hMSA8PCAvQ0EgMSAvY2EgMSA+PgogICA+Pgo+PgplbmRvYmoKNSAwIG9iago8PCAvVHlwZSAvUGFnZQogICAvUGFyZW50IDEgMCBSCiAgIC9NZWRpYUJveCBbIDAgMCA1OTUuMjc1NTc0IDg0MS44ODk3NzEgXQogICAvQ29udGVudHMgMyAwIFIKICAgL0dyb3VwIDw8CiAgICAgIC9UeXBlIC9Hcm91cAogICAgICAvUyAvVHJhbnNwYXJlbmN5CiAgICAgIC9DUyAvRGV2aWNlUkdCCiAgID4+CiAgIC9SZXNvdXJjZXMgMiAwIFIKPj4KZW5kb2JqCjEgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzCiAgIC9LaWRzIFsgNSAwIFIgXQogICAvQ291bnQgMQo+PgplbmRvYmoKNiAwIG9iago8PCAvQ3JlYXRvciAoY2Fpcm8gMS4xMS4yIChodHRwOi8vY2Fpcm9ncmFwaGljcy5vcmcpKQogICAvUHJvZHVjZXIgKGNhaXJvIDEuMTEuMiAoaHR0cDovL2NhaXJvZ3JhcGhpY3Mub3JnKSkKPj4KZW5kb2JqCjcgMCBvYmoKPDwgL1R5cGUgL0NhdGFsb2cKICAgL1BhZ2VzIDEgMCBSCj4+CmVuZG9iagp4cmVmCjAgOAowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDA1ODAgMDAwMDAgbiAKMDAwMDAwMDI1MiAwMDAwMCBuIAowMDAwMDAwMDE1IDAwMDAwIG4gCjAwMDAwMDAyMzAgMDAwMDAgbiAKMDAwMDAwMDM2NiAwMDAwMCBuIAowMDAwMDAwNjQ1IDAwMDAwIG4gCjAwMDAwMDA3NzIgMDAwMDAgbiAKdHJhaWxlcgo8PCAvU2l6ZSA4CiAgIC9Sb290IDcgMCBSCiAgIC9JbmZvIDYgMCBSCj4+CnN0YXJ0eHJlZgo4MjQKJSVFT0YK');
-
-export default {
-	components: {
-		'pdf': vuePdf,
-	},
-	data() {
-		return {
-			// since vue-pdf use PDFJS.getDocument(), we can do:
-			pdfSrc: { data: binaryVersionOfThePdf }
-		}
-	}
-}
-</script>
+    function base64ToArrayBuffer(base64) {
+        var binary_string = window.atob(base64);
+        var len = binary_string.length;
+        var bytes = new Uint8Array(len);
+        for (var i = 0; i < len; i++) {
+            bytes[i] = binary_string.charCodeAt(i);
+        }
+        return bytes.buffer;
+    }
+   </script>
+   
+</body>
+</html>
