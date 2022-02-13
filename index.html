@@ -19,18 +19,14 @@
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.487/pdf.worker.min.js';
 
   pdfjsLib.getDocument({data: pdfData}).then(function getPdfHelloWorld(pdf) {
-    // Fetch the first page.
     pdf.getPage(1).then(function getPageHelloWorld(page) {
       var scale = 1.5;
       var viewport = page.getViewport(scale);
 
-      // Prepare canvas using PDF page dimensions.
       var canvas = document.getElementById('the-canvas');
       var context = canvas.getContext('2d');
       canvas.height = viewport.height;
       canvas.width = viewport.width;
-
-      // Render PDF page into canvas context.
       var renderContext = {
         canvasContext: context,
         viewport: viewport
@@ -40,8 +36,6 @@
   });
 </script>
 
-<hr>
-<h2>JavaScript code:</h2>
 <pre id="code"></pre>
 <script>
   document.getElementById('code').textContent =
