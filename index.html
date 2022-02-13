@@ -7,29 +7,48 @@
   </head>
 
   <body>
-    <canvas id="the-canvas" style="border:1px  solid black"></canvas>
-    <script id="script">
-      // Change base64 with a real base64
-      var pdfData = atob('base64');
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.487/pdf.worker.min.js';
-      pdfjsLib.getDocument({data: pdfData}).then(function getPdfHelloWorld(pdf)
-        {
-          pdf.getPage(1).then(function getPageHelloWorld(page)
-            {
-              var scale = 1.5;
-              var viewport = page.getViewport(scale);
-              var canvas = document.getElementById('the-canvas');
-              var context = canvas.getContext('2d');
-              canvas.height = viewport.height;
-              canvas.width = viewport.width;
-              var renderContext = 
-                {
-                  canvasContext: context,
-                  viewport: viewport
-                };
-              page.render(renderContext);
-            });
-      });
-    </script>
+<style>
+  #pdf-viewer {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
+    overflow: auto;
+  }
+  
+  .pdf-page-canvas {
+    display: block;
+    margin: 5px auto;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+</style>
+
+<script>   
+    url = 'https://github.com/mozilla/pdf.js/blob/master/test/pdfs/tracemonkey.pdf';
+    var thePdf = null;
+    var scale = 1;
+    
+    PDFJS.getDocument(url).promise.then(function(pdf) {
+        thePdf = pdf;
+        viewer = document.getElementById('pdf-viewer');
+        
+        for(page = 1; page <= pdf.numPages; page++) {
+          canvas = document.createElement("canvas");    
+          canvas.className = 'pdf-page-canvas';         
+          viewer.appendChild(canvas);            
+          renderPage(page, canvas);
+        }
+    });
+    
+    function renderPage(pageNumber, canvas) {
+        thePdf.getPage(pageNumber).then(function(page) {
+          viewport = page.getViewport({ scale: scale });
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;          
+          page.render({canvasContext: canvas.getContext('2d'), viewport: viewport});
+    });
+    }
+</script>
+
+<div id='pdf-viewer'></div>
   </body>
 </html>
